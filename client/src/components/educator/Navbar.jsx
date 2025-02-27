@@ -3,7 +3,7 @@ import { assets } from '../../assets/assets';
 import { Link } from 'react-router-dom';
 import { AppContext } from '../../context/AppContext';
 import { UserButton, useUser } from '@clerk/clerk-react';
-
+import favicon from './favicon.svg'
 const Navbar = ({ bgColor }) => {
 
   const { isEducator } = useContext(AppContext)
@@ -12,7 +12,10 @@ const Navbar = ({ bgColor }) => {
   return isEducator && user && (
     <div className={`flex items-center justify-between px-4 md:px-8 border-b border-gray-500 py-3 ${bgColor}`}>
       <Link to="/">
-        <img src={assets.logo} alt="Logo" className="w-28 lg:w-32" />
+        <div className="flex items-center justify-between gap-2">
+                          <img src={favicon} alt="logo" />
+                          <h1 className='text-black text-2xl font-bold'>NextLearn</h1>
+                          </div>
       </Link>
       <div className="flex items-center gap-5 text-gray-500 relative">
         <p>Hi! {user.fullName}</p>

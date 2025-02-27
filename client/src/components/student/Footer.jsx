@@ -1,5 +1,6 @@
 import React from 'react';
 import { assets } from '../../assets/assets';
+import favicon from './favicon.svg'
 
 const Footer = () => {
   return (
@@ -7,9 +8,12 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row items-start px-8 md:px-0 justify-center gap-10 md:gap-32 py-10 border-b border-white/30">
 
         <div className="flex flex-col md:items-start items-center w-full">
-          <img src={assets.logo_dark} alt="logo" />
+          <div className="flex items-center justify-between gap-2">
+          <img src={favicon} alt="logo" />
+          <h1 className='text-white text-2xl font-bold'>NextLearn</h1>
+          </div>
           <p className="mt-6 text-center md:text-left text-sm text-white/80">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.
+          NextLearn offers expert-led courses in technology, arts, and more. Learn at your own pace and unlock your potential with flexible, on-demand learning. Start your journey today!
           </p>
         </div>
 
@@ -36,7 +40,7 @@ const Footer = () => {
 
       </div>
       <p className="py-4 text-center text-xs md:text-sm text-white/60">
-        Copyright 2024 © GreatStack. All Right Reserved.
+        Copyright 2025 © NextLearn. All Right Reserved.
       </p>
     </footer>
   );
