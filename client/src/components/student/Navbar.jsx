@@ -6,6 +6,7 @@ import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { toast } from "react-toastify";
 import axios from "axios";
 import favicon from "./favicon.svg";
+
 const Navbar = () => {
   const location = useLocation();
 
@@ -58,10 +59,14 @@ const Navbar = () => {
         <div className="flex items-center gap-5">
           {user && (
             <>
-              <button onClick={becomeEducator}>
-                {isEducator ? "Educator Dashboard" : "Become Educator"}
-              </button>
-              | <Link to="/my-dashboard">My Dashboard</Link>
+              {isEducator ? (
+                <button onClick={becomeEducator}>Educator Dashboard</button>
+              ) : (
+                <>
+                  <button onClick={becomeEducator}>Become Educator</button>
+                  | <Link to="/my-dashboard">My Dashboard</Link>
+                </>
+              )}
             </>
           )}
         </div>
@@ -76,13 +81,22 @@ const Navbar = () => {
           </button>
         )}
       </div>
+
       {/* For Phone Screens */}
       <div className="md:hidden flex items-center gap-2 sm:gap-5 text-gray-500">
         <div className="flex items-center gap-1 sm:gap-2 max-sm:text-xs">
-          <button onClick={becomeEducator}>
-            {isEducator ? "Educator Dashboard" : "Become Educator"}
-          </button>
-          | {user && <Link to="/my-enrollments">My Dashboard</Link>}
+          {user && (
+            <>
+              {isEducator ? (
+                <button onClick={becomeEducator}>Educator Dashboard</button>
+              ) : (
+                <>
+                  <button onClick={becomeEducator}>Become Educator</button>
+                  | <Link to="/my-dashboard">My Dashboard</Link>
+                </>
+              )}
+            </>
+          )}
         </div>
         {user ? (
           <UserButton />
