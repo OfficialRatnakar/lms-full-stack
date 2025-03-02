@@ -43,6 +43,7 @@ import profile_img2 from './profile_img2.png'
 import profile_img3 from './profile_img3.png'
 import lesson_icon from './lesson_icon.svg'
 import message_icon from './message_icon.svg'
+import myEnrollment from './my-enrollment.svg'
 
 export const assets = {
     logo,
@@ -89,7 +90,8 @@ export const assets = {
     play_icon,
     blue_tick_icon,
     lesson_icon,
-    message_icon
+    message_icon,
+    myEnrollment,
 }
 
 export const dummyTestimonial = [
