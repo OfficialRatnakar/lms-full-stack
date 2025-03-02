@@ -2,35 +2,61 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../context/AppContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import Loading from '../../components/student/Loading';
 
 const MyCourses = () => {
+  const { backendUrl, isEducator, currency, getToken } = useContext(AppContext);
+  const [courses, setCourses] = useState(null);
+  const navigate = useNavigate();
 
-  const { backendUrl, isEducator, currency, getToken } = useContext(AppContext)
-
-  const [courses, setCourses] = useState(null)
-
+  // Fetch educator courses
   const fetchEducatorCourses = async () => {
-
     try {
-
-      const token = await getToken()
-
-      const { data } = await axios.get(backendUrl + '/api/educator/courses', { headers: { Authorization: `Bearer ${token}` } })
-
-      data.success && setCourses(data.courses)
-
+      const token = await getToken();
+      const { data } = await axios.get(`${backendUrl}/api/educator/courses`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      data.success && setCourses(data.courses);
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
+  };
 
-  }
+  // Handle Edit Course
+  const handleEditCourse = (courseId) => {
+    navigate(`/educator/edit-course/${courseId}`);
+  };
 
+  // Handle Delete Course
+  const handleDeleteCourse = async (courseId) => {
+    try {
+      const token = await getToken();
+      const { data } = await axios.delete(
+        `${backendUrl}/api/educator/courses/${courseId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (data.success) {
+        toast.success(data.message);
+        // Remove the deleted course from the state
+        setCourses((prevCourses) =>
+          prevCourses.filter((course) => course._id !== courseId)
+        );
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  // Fetch courses on component mount
   useEffect(() => {
     if (isEducator) {
-      fetchEducatorCourses()
+      fetchEducatorCourses();
     }
-  }, [isEducator])
+  }, [isEducator]);
 
   return courses ? (
     <div className="h-screen flex flex-col items-start justify-between md:p-8 md:pb-0 p-4 pt-8 pb-0">
@@ -44,6 +70,7 @@ const MyCourses = () => {
                 <th className="px-4 py-3 font-semibold truncate">Earnings</th>
                 <th className="px-4 py-3 font-semibold truncate">Students</th>
                 <th className="px-4 py-3 font-semibold truncate">Published On</th>
+                <th className="px-4 py-3 font-semibold truncate">Actions</th>
               </tr>
             </thead>
             <tbody className="text-sm text-gray-500">
@@ -53,10 +80,26 @@ const MyCourses = () => {
                     <img src={course.courseThumbnail} alt="Course Image" className="w-16" />
                     <span className="truncate hidden md:block">{course.courseTitle}</span>
                   </td>
-                  <td className="px-4 py-3">{currency} {Math.floor(course.enrolledStudents.length * (course.coursePrice - course.discount * course.coursePrice / 100))}</td>
+                  <td className="px-4 py-3">
+                    {currency} {Math.floor(course.enrolledStudents.length * (course.coursePrice - course.discount * course.coursePrice / 100))}
+                  </td>
                   <td className="px-4 py-3">{course.enrolledStudents.length}</td>
                   <td className="px-4 py-3">
                     {new Date(course.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-3 flex items-center space-x-2">
+                    <button
+                      onClick={() => handleEditCourse(course._id)}
+                      className="bg-blue-500 text-white px-3 py-1.5 rounded-md hover:bg-blue-600 transition duration-200"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCourse(course._id)}
+                      className="bg-red-500 text-white px-3 py-1.5 rounded-md hover:bg-red-600 transition duration-200"
+                    >
+                      Delete
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -65,7 +108,9 @@ const MyCourses = () => {
         </div>
       </div>
     </div>
-  ) : <Loading />
+  ) : (
+    <Loading />
+  );
 };
 
 export default MyCourses;
