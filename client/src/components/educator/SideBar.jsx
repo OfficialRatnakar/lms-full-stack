@@ -13,7 +13,7 @@ const SideBar = () => {
     { name: 'Add Course', path: '/educator/add-course', icon: assets.add_icon },
     { name: 'My Courses', path: '/educator/my-courses', icon: assets.my_course_icon },
     { name: 'Student Enrolled', path: '/educator/student-enrolled', icon: assets.person_tick_icon },
-    { name:'Message', path:'/educator/Message', icon:assets.message_icon},
+    { name:'Message', path:'/educator/message', icon:assets.message_icon},
     { name: 'My Enrollment', path: '/my-enrollments', icon: assets.myEnrollment },
     { name: 'Create Quiz', path:'./createquiz', icon: assets.quiz},
   ];

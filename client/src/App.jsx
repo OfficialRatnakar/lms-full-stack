@@ -18,7 +18,7 @@ import MyDashboard from './pages/student/MyDashboard';
 import Loading from './components/student/Loading';
 import EditCourse from './pages/educator/EditCourse'; // Import the EditCourse component
 import CreateQuiz  from './pages/educator/CreateQuiz';
-
+import Message from './pages/educator/Message';
 
 const App = () => {
   const isEducatorRoute = useMatch('/educator/*');
@@ -47,6 +47,7 @@ const App = () => {
           <Route path="student-enrolled" element={<StudentsEnrolled />} />
           <Route path="edit-course/:courseId" element={<EditCourse />} /> {/* Add this route */}
           <Route path="createquiz" element={<CreateQuiz />}/>
+          <Route path="message" element={<Message />}/>
         </Route>
       </Routes>
     </div>
