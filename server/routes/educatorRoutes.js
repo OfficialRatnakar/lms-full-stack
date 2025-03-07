@@ -8,6 +8,7 @@ import {
   deleteCourse, // Add this
   updateCourse, // Add this
   getCourseById,
+  createQuiz,
 } from '../controllers/educatorController.js';
 import upload from '../configs/multer.js';
 import { protectEducator } from '../middlewares/authMiddleware.js';
@@ -36,4 +37,6 @@ educatorRouter.delete('/courses/:courseId', protectEducator, deleteCourse);
 educatorRouter.put('/courses/:courseId', upload.single('image'), protectEducator, updateCourse);
 
 educatorRouter.get('/courses/:courseId', protectEducator, getCourseById);
+
+educatorRouter.post('/quiz', protectEducator, createQuiz);
 export default educatorRouter;

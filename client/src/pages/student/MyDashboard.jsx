@@ -28,6 +28,12 @@ const StudentDashboard = () => {
               >
                 Messages
               </Link>
+              <Link
+                to="/"
+                className="hover:text-gray-400 transition duration-200"
+              >
+                Quiz
+              </Link>
             </li>
           </ul>
         </div>

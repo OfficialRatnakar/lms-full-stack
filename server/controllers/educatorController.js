@@ -4,6 +4,53 @@ import { Purchase } from '../models/Purchase.js';
 import User from '../models/User.js';
 import { clerkClient } from '@clerk/express';
 
+// Create a quiz
+export const createQuiz = async (req, res) => {
+  try {
+    const { title, description, questions } = req.body;
+    const educator = req.auth.userId;
+
+    // Validate input
+    if (!educator) {
+      return res.status(400).json({ success: false, message: "Educator ID is missing or invalid." });
+    }
+    if (!title || !description || !questions || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({ success: false, message: "Title, description, and at least one valid question are required." });
+    }
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(educator)) {
+      return res.status(400).json({ success: false, message: "Invalid educator ID." });
+    }
+
+    // Create questions
+    const createdQuestions = await Question.insertMany(questions);
+    if (!createdQuestions || createdQuestions.length === 0) {
+      return res.status(400).json({ success: false, message: "Questions could not be created." });
+    }
+
+    // Get question IDs
+    const questionIds = createdQuestions.map((q) => q._id);
+
+    // Create quiz
+    const quiz = new Quiz({
+      title,
+      description,
+      educator,
+      questions: questionIds,
+    });
+
+    await quiz.save();
+
+    res.status(201).json({ success: true, message: "Quiz created successfully", quiz });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error creating quiz", error: error.message });
+  }
+};
+
+
+
+
 // Update role to educator
 export const updateRoleToEducator = async (req, res) => {
   try {

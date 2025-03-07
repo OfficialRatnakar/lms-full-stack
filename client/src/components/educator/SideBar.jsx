@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { NavLink } from 'react-router-dom';
 import { assets } from '../../assets/assets';
 import { AppContext } from '../../context/AppContext';
+import FloatingChatbot from '../FloatingChatBot';
 
 const SideBar = () => {
 
@@ -14,6 +15,7 @@ const SideBar = () => {
     { name: 'Student Enrolled', path: '/educator/student-enrolled', icon: assets.person_tick_icon },
     { name:'Message', path:'/educator/Message', icon:assets.message_icon},
     { name: 'My Enrollment', path: '/my-enrollments', icon: assets.myEnrollment },
+    { name: 'Create Quiz', path:'./createquiz', icon: assets.quiz},
   ];
 
   return isEducator && (
@@ -34,6 +36,7 @@ const SideBar = () => {
           <p className='md:block hidden text-center'>{item.name}</p>
         </NavLink>
       ))}
+      <FloatingChatbot/>
     </div>
   );
 };

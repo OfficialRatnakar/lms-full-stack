@@ -3,8 +3,73 @@ import { CourseProgress } from "../models/CourseProgress.js"
 import { Purchase } from "../models/Purchase.js"
 import User from "../models/User.js"
 import stripe from "stripe"
+import Quiz from '../models/quiz.js';
+import QuizResult from '../models/QuizResult.js';
 
 
+// Get a quiz by ID
+export const getQuiz = async (req, res) => {
+  const { quizId } = req.params;
+
+  try {
+    const quiz = await Quiz.findById(quizId).populate('questions');
+    res.json(quiz);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching quiz', error });
+  }
+};
+
+// Submit a quiz
+export const submitQuiz = async (req, res) => {
+  const { quizId } = req.params;
+  const { answers } = req.body;
+  const student = req.user._id;
+
+  try {
+    // Fetch quiz and questions
+    const quiz = await Quiz.findById(quizId).populate('questions');
+    const questions = quiz.questions;
+
+    // Calculate score
+    let score = 0;
+    const resultDetails = answers.map((answer) => {
+      const question = questions.find((q) => q._id.toString() === answer.questionId);
+      const isCorrect = question.correctAnswer === answer.selectedAnswer;
+      if (isCorrect) score++;
+      return {
+        question: question._id,
+        selectedAnswer: answer.selectedAnswer,
+        isCorrect,
+      };
+    });
+
+    // Save quiz result
+    const quizResult = new QuizResult({
+      quiz: quizId,
+      student,
+      score,
+      totalQuestions: questions.length,
+      answers: resultDetails,
+    });
+    await quizResult.save();
+
+    res.status(201).json({ score, totalQuestions: questions.length });
+  } catch (error) {
+    res.status(500).json({ message: 'Error submitting quiz', error });
+  }
+};
+
+// Get quiz results for a student
+export const getQuizResults = async (req, res) => {
+  const { studentId } = req.params;
+
+  try {
+    const results = await QuizResult.find({ student: studentId }).populate('quiz');
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching quiz results', error });
+  }
+};
 
 // Get User Data
 export const getUserData = async (req, res) => {
